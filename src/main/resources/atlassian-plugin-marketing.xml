@@ -1,0 +1,11 @@
+<atlassian-plugin-marketing>
+       
+  <!--Describe names and versions of compatible products -->
+  <compatibility>
+    <product name="jira" min="8.20.6" max="9.3.1"/>
+  </compatibility>
+   
+  <!-- Describe your app logo and banner. The banner is only displayed in the UPM. -->
+  <!-- <logo image="images/01_logo.jpg"/>
+  <banner image="images/02_banner.jpg"/> -->
+</atlassian-plugin-marketing>

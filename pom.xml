@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <pluginRepositories>
+    <pluginRepository>
+      <id>atlassian-public</id>
+      <url>https://m2proxy.atlassian.com/repository/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.salto</groupId>
+  <artifactId>compatibility.demo</artifactId>
+  <version>1.0.0</version>
+  <organization>
+    <name>Salto Labs</name>
+    <url>https://salto.io/</url>
+  </organization>
+  <name>Salto Compatilibty Demo for Jira</name>
+  <description>Salto allows you to search, compare, deploy, and track changes across your Jira and Jira Service Management project configuration. This is a compatibility demo</description>
+  <packaging>atlassian-plugin</packaging>
+  <dependencies>
+    <dependency>
+      <!-- For Jira 8/9 compatibility-->    
+      <groupId>com.sevidev</groupId>
+      <artifactId>jira9-compatibility</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
+  </dependency>
+    <dependency>
+      <groupId>com.atlassian.jira</groupId>
+      <artifactId>jira-api</artifactId>
+      <version>${jira.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.atlassian.jira</groupId>
+        <artifactId>jira-core</artifactId>
+        <version>${jira.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.atlassian.plugin</groupId>
+      <artifactId>atlassian-spring-scanner-annotation</artifactId>
+      <version>${atlassian.spring.scanner.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.1.2</version>
+        <configuration>
+          <configLocation>google_checks.xml</configLocation>
+          <violationSeverity>warning</violationSeverity>
+          <suppressionsLocation>
+            checkstyle/checkstyle-suppressions.xml
+          </suppressionsLocation>
+          <suppressionsFileExpression>
+            checkstyle.suppressions.file
+          </suppressionsFileExpression>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>checkstyle</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <failOnViolation>true</failOnViolation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>jira-maven-plugin</artifactId>
+        <version>${amps.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <productVersion>${jira.version}</productVersion>
+          <productDataVersion>${jira.version}</productDataVersion>
+          <!-- Uncomment to install TestKit backdoor in JIRA. -->
+          <!--
+                    <pluginArtifacts>
+                        <pluginArtifact>
+                            <groupId>com.atlassian.jira.tests</groupId>
+                            <artifactId>jira-testkit-plugin</artifactId>
+                            <version>${testkit.version}</version>
+                        </pluginArtifact>
+                    </pluginArtifacts>
+                    -->
+          <enableQuickReload>true</enableQuickReload>
+          <!-- See here for an explanation of default instructions: -->
+          <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->
+          <instructions>
+            <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+            <!-- Add package to export here -->
+            <Export-Package>salto.api,</Export-Package>
+            <!-- Add package import here -->
+            <Import-Package>
+              org.springframework.osgi.*;resolution:="optional",
+              org.eclipse.gemini.blueprint.*;resolution:="optional", 
+              com.atlassian.jira*;resolution:=optional;version="0.0.0",
+              *</Import-Package>
+            <!-- Ensure plugin is spring powered -->
+            <Spring-Context>*</Spring-Context>
+          </instructions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.atlassian.plugin</groupId>
+        <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+        <version>${atlassian.spring.scanner.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>atlassian-spring-scanner</goal>
+            </goals>
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>false</verbose>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <jira.version>8.20.15</jira.version>
+    <amps.version>8.1.2</amps.version>
+    <plugin.testrunner.version>2.0.2</plugin.testrunner.version>
+    <atlassian.spring.scanner.version>2.1.7</atlassian.spring.scanner.version>
+    <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
+    <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+    <!-- TestKit version 6.x for JIRA 6.x -->
+    <testkit.version>6.3.11</testkit.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+</project>

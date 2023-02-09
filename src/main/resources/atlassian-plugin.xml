@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+
+    <param name="atlassian-data-center-status">compatible</param>
+    <param name="atlassian-data-center-compatible">true</param>
+    <param name="plugin-type">data-center</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="salto"/>
+  <rest name="Salto" i18n-name-key="salto.name" key="salto" path="/salto" version="1.0" />
+  <web-section key="salto.admin.configuration.menu" name="Configuration System Menu"
+    location="system.admin.top.navigation.bar"
+    i18n-name-key="salto.menu.name" weight="150">
+    <label key="salto.system.configuration" />
+  </web-section>
+  <web-section key="salto.top.configuration.section" name="Top Configuration Section"
+    location="salto.admin.configuration.menu"
+    i18n-name-key="salto.section.configuration.top.configuration.name" weight="10">   
+  </web-section>
+  <web-section key="salto.configuration" name="Configuration Section"
+    location="salto.top.configuration.section"
+    i18n-name-key="salto.section.configuration.name" weight="30">  
+  </web-section>
+  <web-section key="salto.get.started.configuration" name="Get Started Section"
+    location="salto.top.configuration.section"
+    i18n-name-key="salto.section.configuration.get.started.name" weight="60">  
+  </web-section>
+  <web-item key="salto.get.started.item" name="Salto"
+    section="salto.top.configuration.section/salto.configuration"
+    i18n-name-key="salto.item.name" weight="131">
+    <label key="salto.configuration.get_started" />
+    <link linkId="get-started">/secure/SaltoGetStarted.jspa</link>
+  </web-item>
+  <webwork1 key="get.started.webwork" name="Get Started Webwork Action" class="java.lang.Object" state="disabled">
+    <actions>
+      <action name="salto.ui.GetStarted"
+        alias="SaltoGetStarted" roles-required="sysadmin">
+        <view name="input">/templates/get-started.vm</view>
+        <view name="error">/templates/get-started.vm</view>
+        <view name="success">/templates/get-started.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+<webwork1 key="get.started.webwork_9" name="Get Started Webwork Action for Jira 9 and above" class="java.lang.Object" state="disabled">
+  <actions>
+    <action name="salto.ui.GetStartedVer9" alias="SaltoGetStarted" roles-required="sysadmin">
+      <view name="input">/templates/get-started.vm</view>
+      <view name="error">/templates/get-started.vm</view>
+      <view name="success">/templates/get-started.vm</view>
+    </action>
+</actions>
+</webwork1>
+</atlassian-plugin>

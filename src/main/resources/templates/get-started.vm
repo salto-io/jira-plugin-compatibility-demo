@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="decorator" content="atl.admin"/>
+    <title>Get Started</title>
+</head>
+<body>
+Hello World!
+</body>
+</html>
